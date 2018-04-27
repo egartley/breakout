@@ -19,7 +19,8 @@ public class Ball extends Entity {
 	private final byte VERTICAL_DIRECTION_DOWN = 99;
 	private final byte HORIZONTAL_DIRECTION_LEFT = 97;
 	private final byte HORIZONTAL_DIRECTION_RIGHT = 96;
-	private final double APPARENT_VELOCITY = 2.325D;
+	private final double APPARENT_VELOCITY = 2.875125D;
+	private final double ANGLE_REFRACTION = 22.5D;
 
 	public byte verticalDirection = -1;
 	public byte horizontalDirection = -1;
@@ -116,16 +117,25 @@ public class Ball extends Entity {
 	}
 
 	private void calculateAngle(EntityEntityCollisionEvent event) {
+		// usually paddle, but could be a brick (shouldn't matter)
 		Entity paddle = event.invoker.entities.get(1);
+		if (paddle instanceof Ball) {
+			// if the second entity is for some the reason the ball, then the first entity
+			// must be either the paddle or a brick
+			paddle = event.invoker.entities.get(0);
+		}
 		double ballCenterX = this.x + (diameter / 2);
 		double halfWidth = paddle.width / 2;
 
 		if (ballCenterX < paddle.x + halfWidth) {
 			// left half
-			angle = (45 * ((ballCenterX - paddle.x) / halfWidth)) + 45;
+			angle = 90 * ((ballCenterX - paddle.x) / halfWidth) + ANGLE_REFRACTION;
 		} else {
 			// right half
-			angle = 123;
+			angle = 180 - (90 * ((ballCenterX - (paddle.x + halfWidth)) / halfWidth) + ANGLE_REFRACTION);
+		}
+		if (horizontalDirection != HORIZONTAL_DIRECTION_LEFT && horizontalDirection != HORIZONTAL_DIRECTION_RIGHT) {
+			reflectHorizontal();
 		}
 
 		calculateDeltas();
@@ -164,6 +174,7 @@ public class Ball extends Entity {
 		case 3:
 			horizontalDelta = 0;
 			verticalDelta = APPARENT_VELOCITY;
+			reflectHorizontal();
 			break;
 		case 4:
 			horizontalDelta = (angle - 90) / -90;
@@ -182,10 +193,23 @@ public class Ball extends Entity {
 			break;
 		}
 
-		horizontalDelta *= 1.5;
-		verticalDelta *= 1.5;
-		
-		System.out.println("Angle set to: " + angle + "\nx -> " + horizontalDelta + ", y -> " + verticalDelta);
+		double moe = (horizontalDelta + verticalDelta - APPARENT_VELOCITY) / APPARENT_VELOCITY;
+
+		System.out.println(angle + "°\nx -> " + horizontalDelta + ", y -> " + verticalDelta);
+		System.out.println("Margin of error: " + String.format("%.2f", Math.abs(moe) * 100) + "%\n");
+		if (moe > 0.1D) {
+			// MOE of anything less than 0.1% isn't significant
+			double correction = (APPARENT_VELOCITY * moe) / 2;
+			horizontalDelta -= correction;
+			verticalDelta -= correction;
+			System.out.println(
+					"With correction of " + correction + "\nx -> " + horizontalDelta + ", y -> " + verticalDelta);
+			moe = (horizontalDelta + verticalDelta - APPARENT_VELOCITY) / APPARENT_VELOCITY;
+			System.out.println("Margin of error is now: " + String.format("%.2f", Math.abs(moe) * 100) + "%\n");
+		} else {
+			System.out.println("No correction was applied\n");
+		}
+		System.out.println("-------------------------------------------------\n");
 	}
 
 	@Override
@@ -200,9 +224,6 @@ public class Ball extends Entity {
 			@Override
 			public void onCollide(EntityEntityCollisionEvent event) {
 				travelUpwards();
-				if (horizontalDelta == 0) {
-					reflectHorizontal();
-				}
 				calculateAngle(event);
 			}
 		});

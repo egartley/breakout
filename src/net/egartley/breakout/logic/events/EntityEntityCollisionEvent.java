@@ -1,6 +1,5 @@
 package net.egartley.breakout.logic.events;
 
-import net.egartley.breakout.Debug;
 import net.egartley.breakout.logic.collision.EntityEntityCollision;
 import net.egartley.breakout.logic.interaction.EntityBoundary;
 
@@ -55,8 +54,8 @@ public class EntityEntityCollisionEvent {
 		} else if (into.bottom - tolerance <= collider.top && collider.top <= into.bottom) {
 			collidedSide = BOTTOM_SIDE;
 		} else {
-			Debug.warning(
-					"Could not calcuate a collided side! (between " + collider.parent + " and " + into.parent + ")");
+			// Debug.warning("Could not calcuate a collided side! (between " +
+			// collider.parent + " and " + into.parent + ")");
 		}
 	}
 
