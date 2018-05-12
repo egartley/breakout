@@ -190,7 +190,7 @@ public class Ball extends Entity {
 			break;
 		default:
 			Debug.warning("Could not calculate an angle! (must be [0, 180])");
-			break;
+			return;
 		}
 
 		double moe = (horizontalDelta + verticalDelta - APPARENT_VELOCITY) / APPARENT_VELOCITY;
