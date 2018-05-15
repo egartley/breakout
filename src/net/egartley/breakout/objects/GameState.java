@@ -1,11 +1,9 @@
 package net.egartley.breakout.objects;
 
-import java.awt.Graphics;
+import java.awt.*;
 
 /**
  * One of the game's "states" that has unique render and tick methods
- * 
- * @see SubGameState
  */
 public abstract class GameState {
 
@@ -18,7 +16,7 @@ public abstract class GameState {
 	/**
 	 * Unique integer used to identify different game states
 	 */
-	public int identificationNumber;
+	protected int identificationNumber;
 
 	public abstract void render(Graphics graphics);
 

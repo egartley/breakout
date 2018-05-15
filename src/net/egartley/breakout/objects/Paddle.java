@@ -1,16 +1,15 @@
 package net.egartley.breakout.objects;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
 import net.egartley.breakout.Game;
 import net.egartley.breakout.input.Mouse;
 import net.egartley.breakout.logic.interaction.EntityBoundary;
 
+import java.awt.*;
+
 public class Paddle extends Entity {
 
-	public static final short WIDTH = 200;
-	public static final short HEIGHT = 12;
+	private static final short WIDTH = 200;
+	private static final short HEIGHT = 12;
 
 	private static final short HALF_WIDTH = WIDTH / 2;
 

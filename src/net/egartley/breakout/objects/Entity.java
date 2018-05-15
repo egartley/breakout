@@ -1,10 +1,5 @@
 package net.egartley.breakout.objects;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.util.ArrayList;
-
 import net.egartley.breakout.Game;
 import net.egartley.breakout.Util;
 import net.egartley.breakout.logic.collision.EntityEntityCollision;
@@ -12,11 +7,11 @@ import net.egartley.breakout.logic.events.EntityEntityCollisionEvent;
 import net.egartley.breakout.logic.interaction.EntityBoundary;
 import net.egartley.breakout.logic.math.Calculate;
 
+import java.awt.*;
+import java.util.ArrayList;
+
 /**
  * Something that can rendered with a sprite and have a specific position
- * 
- * @see AnimatedEntity
- * @see StaticEntity
  */
 public abstract class Entity {
 
@@ -26,7 +21,7 @@ public abstract class Entity {
 	/**
 	 * Collection of this entity's collisions
 	 */
-	public ArrayList<EntityEntityCollision> collisions;
+	ArrayList<EntityEntityCollision> collisions;
 	/**
 	 * Collection of this entity's boundaries
 	 */
@@ -52,14 +47,9 @@ public abstract class Entity {
 	public double width;
 	public double height;
 	/**
-	 * The entity's unique identifacation number. Use {@link #id} for user-friendly
-	 * identification
+	 * The entity's unique identifacation number
 	 */
-	public int uuid;
-	/**
-	 * Whether or not this entity is animated
-	 */
-	public boolean isAnimated;
+	private int uuid;
 	/**
 	 * Whether or not this entity is static (no animation)
 	 */
@@ -79,19 +69,12 @@ public abstract class Entity {
 	private int nameX;
 	private int nameY;
 
-	/**
-	 * Creates a new entity with a randomly generated UUID, then adds it to the
-	 * entity store
-	 * 
-	 * @param id
-	 *            Human-readable ID for the entity
-	 */
 	public Entity(double width, double height) {
 		this.width = width;
 		this.height = height;
 		generateUUID();
-		boundaries = new ArrayList<EntityBoundary>();
-		collisions = new ArrayList<EntityEntityCollision>();
+		boundaries = new ArrayList<>();
+		collisions = new ArrayList<>();
 	}
 
 	/**
@@ -138,14 +121,13 @@ public abstract class Entity {
 	}
 
 	/**
-	 * Draws the entity's "name tag", which displays its {@link #id} and
-	 * {@link #uuid}
+	 * Draws the entity's "name tag"
 	 * 
 	 * @param graphics
 	 *            Graphics object to use
 	 */
 	private void drawNameTag(Graphics graphics) {
-		if (setFontMetrics == false) {
+		if (!setFontMetrics) {
 			// init, only run once
 			name = toString();
 			nameTagWidth = graphics.getFontMetrics(nameTagFont).stringWidth(name) + 8; // 4px padding on both sides

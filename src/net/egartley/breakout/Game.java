@@ -1,18 +1,13 @@
 package net.egartley.breakout;
 
-import java.awt.Canvas;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferStrategy;
-
-import javax.swing.JFrame;
-
 import net.egartley.breakout.gamestates.InGameState;
 import net.egartley.breakout.input.Mouse;
 import net.egartley.breakout.objects.GameState;
 import net.egartley.breakout.threads.MasterTick;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferStrategy;
 
 /**
  * @author Evan Gartley
@@ -66,7 +61,7 @@ public class Game extends Canvas implements Runnable {
 		// set window size
 		frame.setSize(windowDimension.width, windowDimension.height);
 		// normal close operation
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		// enforce window size (for now)
 		frame.setResizable(false);
 		// add mouse input
@@ -91,7 +86,7 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private synchronized void start() {
-		if (running == true) {
+		if (running) {
 			// already "running" so the render and tick threads should have already been
 			// started
 			return;
@@ -108,7 +103,7 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	private synchronized void stop() {
-		if (running == false) {
+		if (!running) {
 			return;
 		}
 		// stops the fps system, thus ending calls to render and tick methods
